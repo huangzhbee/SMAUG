@@ -15,8 +15,6 @@ from main_model import Model_Shanghai
 from dataset_shanghai import get_dataloader
 from utils import train, evaluate
 
-setproctitle.setproctitle("hzh")
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 parser = argparse.ArgumentParser(description="App Generation")
 parser.add_argument("--config", type=str, default="base.yaml")
