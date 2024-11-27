@@ -8,7 +8,7 @@ import pandas as pd
 from torch.utils.data import DataLoader, Dataset
 
 
-def extract_half_hour(x):  # 获取time_bin
+def extract_half_hour(x):
     hour = x.hour
     min = x.minute
     t = 2 * hour
@@ -51,7 +51,7 @@ class Shanghai_Dataset(Dataset):
         self.App_seqs = []
         self.Session_ids = []
 
-        path = ("shanghai_appinfo" + "_30min" + ".pk")
+        path = ("shanghai_appinfo.pk")
 
         if os.path.isfile(path) == False:  # if datasetfile is none, create
             data = pd.read_csv('../data/shanghai/stay point/app_usage_trace_30min_session.txt', sep='\t', header=0)
