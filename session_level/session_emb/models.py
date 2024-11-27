@@ -5,7 +5,7 @@ import open_clip
 from model_init import Model_init
 from transformers import BertTokenizer
 
-# 加载预训练的BERT分词器
+
 tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
 
 urbanclip_init = Model_init(
@@ -19,22 +19,22 @@ urbanclip_init = Model_init(
 
 # test
 text = torch.randint(0, 20000, (4, 512)).cuda()
-images = torch.randn(4, 3, 256, 256).cuda()
+emb = torch.randn(4, 3, 256, 256).cuda()
 
 loss = urbanclip_init(
     text=text,
-    images=images,
-    return_loss=True  # set this to True to get the full caption + contrastive loss
+    images=emb,
+    return_loss=True
 )
 loss.backward()
 
 logits = urbanclip_init(
     text=text,
-    images=images
+    images=emb
 )
 
-text_embeds, image_embeds = urbanclip_init(
+text_embeds, session_embeds = urbanclip_init(
     text=text,
-    images=images,
+    images=emb,
     return_embeddings=True
 )
