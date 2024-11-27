@@ -10,9 +10,6 @@ import setproctitle
 from dataset import get_dataloader
 import pickle
 
-setproctitle.setproctitle("hzh")
-os.environ['CUDA_VISIBLE_DEVICES'] = '1'
-
 
 class AppSequenceDataset(Dataset):
     def __init__(self, sequences):
@@ -78,17 +75,6 @@ class LSTMEncoder(nn.Module):
         outputs = torch.stack(outputs).squeeze(1)
         return outputs
 
-
-# sequences = np.random.randn(1000, 1856, 32)  # 1000个样本，每个样本是10个时间步，每个时间步有32个特征
-# dataset = AppSequenceDataset(sequences)
-#
-# train_size = int(0.8 * len(dataset))
-# val_size = len(dataset) - train_size
-# train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
-#
-# train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-# val_loader = DataLoader(val_dataset, batch_size=64, shuffle=False)
-
 train_loader, val_loader, all_loader = get_dataloader(seed=1, batch_size=32)
 
 
@@ -98,7 +84,7 @@ criterion = ContrastiveLoss(margin=1.0)
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 num_epochs = 100
-patience = 5  # 如果验证损失在指定的epoch数量中没有改善，提前停止训练
+patience = 5 
 best_val_loss = float('inf')
 epochs_no_improve = 0
 
@@ -139,18 +125,16 @@ for epoch in tqdm.tqdm(range(num_epochs)):
 
     print(f'Epoch [{epoch + 1}/{num_epochs}], Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}')
 
-    # 检查是否需要早停
     if val_loss < best_val_loss:
         best_val_loss = val_loss
         epochs_no_improve = 0
-        # torch.save(model.state_dict(), 'best_model.pt')  # 保存最佳模型
+        # torch.save(model.state_dict(), 'best_model.pt')
     else:
         epochs_no_improve += 1
         if epochs_no_improve >= patience:
             print('Early stopping')
             break
 
-# 获取表征向量
 model.eval()
 embeds = []
 idxs = []
@@ -163,8 +147,3 @@ with torch.no_grad():
         idxs.append(seq_idx.cpu().numpy())
 embeds = np.concatenate(embeds, axis=0)
 idxs = np.concatenate(idxs, axis=0)
-with open("session_emb.pk", "wb") as f:
-    pickle.dump(
-        [idxs, embeds],
-        f
-    )
