@@ -4,8 +4,8 @@ from transformers import AutoTokenizer, GPT2Tokenizer
 
 
 client = OpenAI(
-    base_url='https://api.openai-proxy.org/v1',
-    api_key='sk-sxmyqjCgJTwVMLQ905HPmR65XT8AK1IfsheAn1sOxFI0Mpk7',
+    base_url='xxxx',
+    api_key='xxxx',
 )
 
 system_content = ("Write a comprehensive text summary of the user’s app usage activities,"
